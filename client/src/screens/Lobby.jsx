@@ -1,15 +1,20 @@
 import { useState, useCallback } from "react";
 
+import { useSocket } from "../hooks/useSocket";
+
 export function LobbyScreen() {
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("");
 
+  const socket = useSocket();
+
   const handleSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
-      console.log({ email, room });
+
+      socket.emit("room:join", { email, room });
     },
-    [email, room]
+    [email, room, socket]
   );
 
   return (

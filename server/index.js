@@ -6,4 +6,6 @@ const io = new Server(8000, {
 
 io.on("connection", (socket) => {
   console.log(`Socket Connected with ID: ${socket.id}`);
+
+  socket.on("room:join", (data) => console.log(data));
 });
