@@ -1,9 +1,14 @@
+import { Routes, Route } from "react-router-dom";
+
 import "./App.css";
+import { LobbyScreen } from "./screens/Lobby";
 
 function App() {
   return (
     <>
-      <p>Hello World.</p>
+      <Routes>
+        <Route path="/" element={<LobbyScreen />} />
+      </Routes>
     </>
   );
 }
