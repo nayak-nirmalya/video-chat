@@ -17,9 +17,18 @@ export function LobbyScreen() {
     [email, room, socket]
   );
 
+  const handleJoinRoom = useCallback((data) => {
+    const { email, room } = data;
+    console.log({ email, room });
+  }, []);
+
   useEffect(() => {
     socket.on("room:join", (data) => console.log({ data }));
-  }, [socket]);
+
+    return () => {
+      socket.off("room:join", handleJoinRoom);
+    };
+  }, [socket, handleJoinRoom]);
 
   return (
     <div>
