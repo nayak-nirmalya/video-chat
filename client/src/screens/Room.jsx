@@ -5,10 +5,20 @@ import { useSocket } from "../hooks/useSocket";
 export function RoomScreen() {
   const socket = useSocket();
   const [remoteSocketId, setRemoteSocketId] = useState(null);
+  const [myStream, setMyStream] = useState(null);
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log({ email, id });
     setRemoteSocketId(id);
+  }, []);
+
+  const handleCallUser = useCallback(async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
+
+    setMyStream(stream);
   }, []);
 
   useEffect(() => {
