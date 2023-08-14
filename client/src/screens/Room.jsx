@@ -1,4 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
+import ReactPlayer from "react-player";
 
 import { useSocket } from "../hooks/useSocket";
 
@@ -33,8 +34,8 @@ export function RoomScreen() {
     <div>
       <h1>RoomScreen</h1>
       <h4>{remoteSocketId ? "Connected" : "No One in this Room."}</h4>
-
-      {remoteSocketId && <button>CALL</button>}
+      {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
+      {myStream && <ReactPlayer url={myStream} />}
     </div>
   );
 }
