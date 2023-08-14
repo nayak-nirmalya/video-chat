@@ -44,7 +44,10 @@ export function RoomScreen() {
     [socket]
   );
 
-  const handleCallAccepted = useCallback(({ from, ans }) => {}, []);
+  const handleCallAccepted = useCallback(({ ans }) => {
+    peer.setLocalDescription(ans);
+    console.log("Call Accepted.");
+  }, []);
 
   useEffect(() => {
     socket.on("user:joined", handleUserJoined);
