@@ -35,7 +35,12 @@ export function RoomScreen() {
       <h1>RoomScreen</h1>
       <h4>{remoteSocketId ? "Connected" : "No One in this Room."}</h4>
       {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
-      {myStream && <ReactPlayer url={myStream} />}
+      {myStream && (
+        <>
+          <h3>My Video</h3>
+          <ReactPlayer height="200px" playing muted url={myStream} />
+        </>
+      )}
     </div>
   );
 }
