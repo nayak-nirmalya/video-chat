@@ -26,19 +26,37 @@ export function RoomScreen() {
     setMyStream(stream);
   }, [remoteSocketId, socket]);
 
-  const handleIncommingCall = useCallback(({ from, offer }) => {
-    console.log({ from, offer });
-  }, []);
+  const handleIncommingCall = useCallback(
+    async ({ from, offer }) => {
+      setRemoteSocketId(from);
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      });
+      setMyStream(stream);
+
+      console.log({ from, offer });
+      const ans = await peer.getAnswer(offer);
+
+      socket.emit("call:accepted", { to: from, ans });
+    },
+    [socket]
+  );
+
+  const handleCallAccepted = useCallback(({ from, ans }) => {}, []);
 
   useEffect(() => {
     socket.on("user:joined", handleUserJoined);
     socket.on("incomming:call", handleIncommingCall);
+    socket.on("call:accepted", handleCallAccepted);
 
     () => {
       socket.off("user:joined", handleUserJoined);
       socket.off("incomming:call", handleIncommingCall);
+      socket.off("call:accepted", handleCallAccepted);
     };
-  }, [socket, handleUserJoined, handleIncommingCall]);
+  }, [socket, handleUserJoined, handleIncommingCall, handleCallAccepted]);
 
   return (
     <div>
