@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { useSocket } from "../hooks/useSocket";
 
@@ -16,6 +16,10 @@ export function LobbyScreen() {
     },
     [email, room, socket]
   );
+
+  useEffect(() => {
+    socket.on("room:join", (data) => console.log({ data }));
+  }, [socket]);
 
   return (
     <div>
