@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 
 import { useSocket } from "../hooks/useSocket";
+import peer from "../service/peer";
 
 export function RoomScreen() {
   const socket = useSocket();
@@ -19,8 +20,11 @@ export function RoomScreen() {
       video: true,
     });
 
+    const offer = await peer.getOffer();
+    socket.emit("user:call", { to: remoteSocketId, offer });
+
     setMyStream(stream);
-  }, []);
+  }, [remoteSocketId, socket]);
 
   useEffect(() => {
     socket.on("user:joined", handleUserJoined);
