@@ -26,13 +26,19 @@ export function RoomScreen() {
     setMyStream(stream);
   }, [remoteSocketId, socket]);
 
+  const handleIncommingCall = useCallback(({ from, offer }) => {
+    console.log({ from, offer });
+  }, []);
+
   useEffect(() => {
     socket.on("user:joined", handleUserJoined);
+    socket.on("incomming:call", handleIncommingCall);
 
     () => {
       socket.off("user:joined", handleUserJoined);
+      socket.off("incomming:call", handleIncommingCall);
     };
-  }, [socket, handleUserJoined]);
+  }, [socket, handleUserJoined, handleIncommingCall]);
 
   return (
     <div>
