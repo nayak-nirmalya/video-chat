@@ -45,16 +45,20 @@ export function RoomScreen() {
     [socket]
   );
 
+  const sendStreams = useCallback(() => {
+    for (const track of myStream.getTracks()) {
+      peer.peer.addTrack(track, myStream);
+    }
+  }, [myStream]);
+
   const handleCallAccepted = useCallback(
-    ({ ans }) => {
-      peer.setLocalDescription(ans);
+    async ({ ans }) => {
+      await peer.setLocalDescription(ans);
       console.log("Call Accepted.");
 
-      for (const track of myStream.getTracks()) {
-        peer.peer.addTrack(track, myStream);
-      }
+      sendStreams();
     },
-    [myStream]
+    [sendStreams]
   );
 
   const handleNegoNeeded = useCallback(async () => {
@@ -63,8 +67,8 @@ export function RoomScreen() {
   }, [remoteSocketId, socket]);
 
   const handleNegoIncomming = useCallback(
-    ({ from, offer }) => {
-      const answer = peer.getAnswer(offer);
+    async ({ from, offer }) => {
+      const answer = await peer.getAnswer(offer);
       socket.emit("peer:nego:done", { to: from, answer });
     },
     [socket]
@@ -84,7 +88,8 @@ export function RoomScreen() {
   useEffect(() => {
     peer.peer.addEventListener("track", async (ev) => {
       const remoteStream = ev.streams;
-      setRemoteStream(remoteStream);
+      console.log("Got Tracks.");
+      setRemoteStream(remoteStream[0]);
     });
   }, []);
 
@@ -115,6 +120,7 @@ export function RoomScreen() {
     <div>
       <h1>RoomScreen</h1>
       <h4>{remoteSocketId ? "Connected" : "No One in this Room."}</h4>
+      {myStream && <button onClick={sendStreams}>Send Stream</button>}
       {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
       {myStream && (
         <>
